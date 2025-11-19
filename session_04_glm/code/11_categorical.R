@@ -12,7 +12,7 @@ model <- cmdstan_model("./session_04_glm/models/categorical.stan")
 # load data
 data <- read.csv("./session_04_glm/data/shot_types.csv", stringsAsFactors = TRUE)
 
-# contrasts (similar as one hot encoding)
+# contrasts (one hot encoding with a reference category)
 contrasts(data$PlayerType) <- contr.treatment(n_distinct(data$PlayerType))
 
 # display contrasts
@@ -54,16 +54,22 @@ df_betas <- df_betas %>% select(-.chain, -.iteration, -.draw)
 
 # beta matrix composed of sample means
 # working with means from here one for brevity and simplicity purposes
-# the true bayesian way would be to work with samples all the way
+# a true bayesian approach would be to work with samples all the way
 betas <- matrix(colMeans(df_betas), nrow = 3, ncol = 4)
+
+# inspect betas
+# first row is above head, second is hook shot, third is layup (reference)
+# first column is the intercept, second is distance,
+# third is forward, fourth is guard (both are compared to centre, the reference)
+betas
 
 # helper softmax function ------------------------------------------------------
 softmax <- function(x) {
-  return(as.vector(exp(x) / sum(exp(x))))
+  as.vector(exp(x) / sum(exp(x)))
 }
 
 # calculate example probabilities ----------------------------------------------
-# probabilities for each shot type for a guard shooting from 1.5m
+# probabilities for each shot type for a guard shooting from 1.5 m
 # x <- c(intercept, distance, forward, guard)
 x <- c(1, 1.5, 0, 1)
 

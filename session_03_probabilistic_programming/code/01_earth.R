@@ -26,7 +26,7 @@ land <- 2 - water
 df <- data.frame(x, y = water, group = "water")
 df <- rbind(df, data.frame(x, y = land, group = "land"))
 ggplot(df, aes(x, y, color = group)) +
-  geom_line(size = 2) +
+  geom_line(linewidth = 2) +
   xlab("Water percentage") +
   ylab("Likelihood") +
   scale_color_brewer(palette = "Set1") +
@@ -81,6 +81,7 @@ saw_water <- function(our_belief) {
 }
 
 # init belief is equal to prior
+r <- list()
 r$our_belief <- prior
 
 # sample location from https://www.realrandom.net/location.html
@@ -91,6 +92,9 @@ r <- saw_land(r$our_belief)
 # saw water
 r <- saw_water(r$our_belief)
 
+# ------------------------------------------------------------------------------
+# WARNING: spoilers below
+
 # plot the truth
 r$plot +
-  geom_vline(xintercept = 0.71, linetype = "dashed", size = 1)
+  geom_vline(xintercept = 0.71, linetype = "dashed", linewidth = 1)

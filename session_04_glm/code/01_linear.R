@@ -68,7 +68,7 @@ ggplot() +
   geom_abline(
     data = df_100,
     aes(slope = b, intercept = a),
-    alpha = 0.,
+    alpha = 0.1,
     linewidth = 1,
     color = "skyblue"
   ) +
@@ -82,6 +82,3 @@ for (i in 1:4000) {
   predictions[i] <- df$a[i] + df$b[i] * (2100 - min_year)
 }
 hdi(predictions, prob = 0.9)
-
-# year 2015
-data %>% filter(year == 2015)
