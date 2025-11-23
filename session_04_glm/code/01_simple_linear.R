@@ -16,19 +16,24 @@ data <- read.csv("./session_04_glm/data/temperature.csv", sep = ";")
 
 # remove month
 data <- data %>% select(-month)
+data
 
 # mean per year
 data <- data %>%
   group_by(year) %>%
   summarise(temperature = mean(temperature))
+data
 
 # x shift for numerical stability
 min_year <- min(data$year)
 x <- data$year - min_year
 y <- data$temperature
+x
+y
 
 # prepare input for Stan
 stan_data <- list(n = nrow(data), x = x, y = y)
+stan_data
 
 # fit
 fit <- model$sample(
@@ -46,12 +51,14 @@ fit$summary()
 # analysis ---------------------------------------------------------------------
 # params
 df <- as_draws_df(fit$draws())
+df
 mcse(df$a)
 mcse(df$b)
 mcse(df$b > 0)
 
 # plot only 100 random regression lines
 df_100 <- sample_n(df, 100)
+df_100
 
 # x axis
 x_breaks <- seq(from = 0, to = 120, length.out = 5)

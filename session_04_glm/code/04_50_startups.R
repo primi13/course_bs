@@ -108,6 +108,7 @@ df_ratios_normalized$Type <- "Normalized"
 
 # means
 df_ratios <- rbind(df_ratios_default, df_ratios_normalized)
+df_ratios
 
 # to long format
 df_ratios <- df_ratios %>% gather(
@@ -115,6 +116,8 @@ df_ratios <- df_ratios %>% gather(
   Value,
   c(Research, Administration, Marketing)
 )
+df_ratios
+
 # plot
 ggplot(data = df_ratios, aes(x = Value, y = Variable)) +
   stat_eye(fill = "skyblue", alpha = 0.75) +

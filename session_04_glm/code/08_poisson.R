@@ -15,21 +15,25 @@ model <- cmdstan_model("./session_04_glm/models/poisson.stan")
 
 # load data
 data <- read.csv("./session_04_glm/data/football.csv", sep = ";")
+data[1:5, ]
 
 # drop missing data
 data <- drop_na(data)
+data[1:5, ]
 
 # prep data
-df_X <- data %>% select(
+df_X <- data %>% dplyr::select(
   -INFO_Date, -INFO_Competition,
   -INFO_TeamH, -INFO_TeamA, -Y_FTHG, -Y_FTAG
 )
+df_X[1:5, ]
 
 # add ID column, we will need it later
 data$ID <- seq.int(nrow(data))
 
 # center and standardize
 X <- scale(df_X)
+X[1:5, ]
 
 # plot correlation of independent variables
 pairs.panels(X,
@@ -66,13 +70,15 @@ df_pred <- as_draws_df(fit$draws("pred"))
 
 # plot betas -------------------------------------------------------------------
 # remove unwanted columns
-df_beta <- df_beta %>% select(-.chain, -.iteration, -.draw)
-
+df_beta <- df_beta %>% dplyr::select(-.chain, -.iteration, -.draw)
+df_beta[1:5, ]
 # rename for ease of addressing
 colnames(df_beta) <- colnames(df_X)
+df_beta[1:5, ]
 
 # to long format
 df_beta <- df_beta %>% gather(Beta, Value)
+df_beta[1:5, ]
 
 # plot
 ggplot(data = df_beta, aes(x = Value, y = Beta)) +
@@ -83,8 +89,10 @@ ggplot(data = df_beta, aes(x = Value, y = Beta)) +
   )
 
 # compare lambda vs actual scored goals ----------------------------------------
-df_lambda <- df_lambda %>% select(-.chain, -.iteration, -.draw)
+df_lambda <- df_lambda %>% dplyr::select(-.chain, -.iteration, -.draw)
+df_lambda[1:5, ]
 df_lambda_goals <- data.frame(Goals = data$Y_FTHG, Lambda = colMeans(df_lambda))
+df_lambda_goals[1:5, ]
 
 # x axis labels
 goals <- sort(unique(df_lambda_goals$Goals))
@@ -95,7 +103,7 @@ ggplot(data = df_lambda_goals, aes(x = Goals, y = Lambda)) +
   scale_x_continuous("Goals", breaks = goals, labels = goals)
 
 # compare predictions vs home goals for Atletico Madrid ------------------------
-df_pred <- df_pred %>% select(-.chain, -.iteration, -.draw)
+df_pred <- df_pred %>% dplyr::select(-.chain, -.iteration, -.draw)
 
 # compare last 9 games in the dataset
 df_am <- data %>% filter(INFO_TeamH == "Ath Madrid")

@@ -18,21 +18,27 @@ data <- read.csv("./session_03_probabilistic_programming/data/basketball_shots.c
 
 # filter for 1st player, default and special rims
 player1_default <- data %>% filter(PlayerID == 1 & SpecialRim == 0)
+player1_default
 player1_special <- data %>% filter(PlayerID == 1 & SpecialRim == 1)
+player1_special
 
 # prepare input data
 stan_data_default <- list(n = nrow(player1_default), y = player1_default$Made)
+stan_data_default
 stan_data_special <- list(n = nrow(player1_special), y = player1_special$Made)
+stan_data_special
 
 # fitting and diagnostics ------------------------------------------------------
 fit_default <- model$sample(
   data = stan_data_default,
-  seed = 1
+  seed = 1,
+  parallel_chains = 4
 )
 
 fit_special <- model$sample(
   data = stan_data_special,
-  seed = 1
+  seed = 1,
+  parallel_chains = 4
 )
 
 # traceplots
@@ -55,6 +61,10 @@ launch_shinystan(fit_special)
 # convert draws to data frame
 df_default <- as_draws_df(fit_default$draws("theta"))
 df_special <- as_draws_df(fit_special$draws("theta"))
+fit_default$draws("theta")
+fit_special$draws("theta")
+df_default$theta
+df_special$theta
 
 # compare
 mcse(df_default$theta - df_special$theta)
@@ -72,16 +82,21 @@ df_player1 <- rbind(df_default, df_special)
 
 # plot
 ggplot(data = df_player1, aes(x = theta, group = Rim, fill = Rim)) +
-  geom_density(alpha = 0.5, color = NA) +
-  scale_fill_brewer(type = "qual", palette = 3) +
+  geom_density(alpha = 0.5, color = "black") +
+  scale_fill_brewer(type = "qual", palette = 5) +
   xlim(0, 1) +
   theme_minimal()
 
+df_default
+df_special
+
 # draws from the distribution for the default rim
 draws_default <- rbinom(nrow(df_default), 1, df_default$theta)
+draws_default
 
 # draws from the distribution for the special rim
-draws_special <- rbinom(nrow(df_default), 1, df_special$theta)
+draws_special <- rbinom(nrow(df_special), 1, df_special$theta)
+draws_special
 
 # compare
 mcse(draws_default > draws_special)

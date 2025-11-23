@@ -57,7 +57,9 @@ pred_intervals <- lapply(1:n_samples, function(i) {
     draw = i
   )
 })
+pred_intervals
 pred_df <- bind_rows(pred_intervals)
+pred_df
 
 # visualize data points with regression lines and uncertainty bands
 ggplot() +

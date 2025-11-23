@@ -19,6 +19,12 @@ contrasts(data$religion) <- contr.treatment(n_distinct(data$religion))
 contrasts(data$degree) <- contr.treatment(n_distinct(data$degree))
 contrasts(data$country) <- contr.treatment(n_distinct(data$country))
 contrasts(data$sex) <- contr.treatment(n_distinct(data$sex))
+contrasts(data$religion)
+contrasts(data$degree)
+contrasts(data$country)
+contrasts(data$sex)
+
+
 
 # note that intercept is part of the model matrix (1st column always equals 1)
 X <- model.matrix(~ religion + degree + country + sex, data)
@@ -64,9 +70,9 @@ fit$summary("c")
 # analysis ---------------------------------------------------------------------
 # extract parameters
 df_beta <- as_draws_df(fit$draws("beta"))
-df_beta <- df_beta %>% select(-.chain, -.iteration, -.draw)
+df_beta <- df_beta %>% dplyr::select(-.chain, -.iteration, -.draw)
 df_cutpoints <- as_draws_df(fit$draws("c"))
-df_cutpoints <- df_cutpoints %>% select(-.chain, -.iteration, -.draw)
+df_cutpoints <- df_cutpoints %>% dplyr::select(-.chain, -.iteration, -.draw)
 
 # plot betas -------------------------------------------------------------------
 # rename for ease of addressing
