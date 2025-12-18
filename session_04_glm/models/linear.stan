@@ -12,11 +12,6 @@ parameters {
 }
 
 model {
-  // priors
-  a ~ normal(50, 20);
-  b ~ normal(0, 5);
-  sigma ~ exponential(1);
-
   // model
   y ~ normal(a + X * b, sigma);
 }
