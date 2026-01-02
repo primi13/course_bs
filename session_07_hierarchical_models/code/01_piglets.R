@@ -105,10 +105,12 @@ fit_s$summary()
 # samples
 df_s <- as_draws_df(fit_s$draws(c("sigma", "mu")))
 df_s <- df_s %>% select(-.draw, -.chain, -.iteration)
+df_s
 
 # visual posterior check
 # use only n_dist distributions
 df_sample_s <- sample_n(df_s, n_dist)
+df_sample_s
 
 # number of mama pigs
 n_mamas <- max(data$mama_pig)
@@ -180,6 +182,7 @@ fit_h$summary()
 # samples
 df_h <- as_draws_df(fit_h$draws(c("sigma", "mu", "mu_mu", "sigma_mu")))
 df_h <- df_h %>% select(-.draw, -.chain, -.iteration)
+df_h
 
 # visual posterior check
 # use only n_dist distributions
@@ -243,9 +246,12 @@ df_group <- rbind(df_group, data.frame(
   HDI95 = sample_mean,
   Model = "Sample"
 ))
+df_group
 
 # simple normal model
+df_n
 normal_mean <- mean(df_n$mu)
+normal_mean
 normal_90_hdi <- hdi(df_n$mu, credMass = 0.9)
 df_group <- rbind(df_group, data.frame(
   Mean = normal_mean,
@@ -255,7 +261,9 @@ df_group <- rbind(df_group, data.frame(
 ))
 
 # hierarchical model
+df_h
 hierarchical_mean <- mean(df_h$mu_mu)
+hierarchical_mean
 hierarchical_90_hdi <- hdi(df_h$mu_mu, credMass = 0.9)
 df_group <- rbind(df_group, data.frame(
   Mean = hierarchical_mean,
@@ -308,9 +316,13 @@ df_subject <- rbind(df_subject, data.frame(
 ))
 
 # subject means
+df_s
 df_mu_s <- df_s %>% select(2:(1 + n_mamas))
+df_mu_s
 s_means <- colMeans(df_mu_s)
+s_means
 s_90_hdi <- apply(df_mu_s, 2, hdi, credMass = 0.9)
+s_90_hdi
 df_subject <- rbind(df_subject, data.frame(
   Mean = s_means,
   HDI5 = s_90_hdi[1, ],
@@ -320,6 +332,7 @@ df_subject <- rbind(df_subject, data.frame(
 ))
 
 # hierarchical means
+df_h
 df_mu_h <- df_h %>% select(2:(1 + n_mamas))
 h_means <- colMeans(df_mu_h)
 h_hdi90 <- apply(df_mu_h, 2, hdi, credMass = 0.9)
@@ -391,14 +404,19 @@ mcse(df_h2$mu_mu > df_h$mu_mu)
 # find the best pig out of all mama pigs ---------------------------------------
 # select only subject level mus
 df_mu_mamas <- df_h %>% select(-sigma, -mu_mu, -sigma_mu)
+df_mu_mamas
 df_mu_mamas <- cbind(df_mu_mamas, df_h2 %>% select(-sigma, -mu_mu, -sigma_mu))
+df_mu_mamas
+str(df_mu_mamas)
 
 # name columns from 1 to n
 n_mamas <- ncol(df_mu_mamas)
 colnames(df_mu_mamas) <- c(1:n_mamas)
+str(df_mu_mamas)
 
 # number of samples
 n_samples <- nrow(df_mu_mamas)
+n_samples # 4000
 
 # repeat 100 times
 n_repeats <- 100
@@ -415,10 +433,11 @@ for (i in 1:n_repeats) {
   for (j in seq_len(nrow(df_boot))) {
     best_mama_ix <- c(best_mama_ix, which.max(df_boot[j, ]))
   }
+  best_mama_ix
 
   # to factor
   best_mama_ix <- factor(best_mama_ix, levels = 1:n_mamas)
-
+  
   # count
   count_df <- as.data.frame(table(best_mama_ix))
 
@@ -427,6 +446,7 @@ for (i in 1:n_repeats) {
 
   # rename
   colnames(count_df) <- c("best_mama_ix", "prob")
+  count_df
 
   # append
   best_mama_counts <- rbind(best_mama_counts, count_df)

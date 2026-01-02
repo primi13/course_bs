@@ -84,6 +84,8 @@ fit22 <- model$sample(
   seed = 1
 )
 
+str(as_draws_df(fit11$draws()))
+
 # trace plots of top level parameters
 mcmc_trace(fit11$draws(c("mu_a", "mu_b")))
 mcmc_trace(fit12$draws(c("mu_a", "mu_b")))
@@ -110,7 +112,7 @@ df_check <- as_draws_df(fit$draws(c("alpha", "beta")))
 df_check <- df_check %>% select(-.draw, -.chain, -.iteration)
 
 df_check <- sample_n(df_check, n_lines)
-
+df_check
 n_subjects <- ncol(df_check) / 2
 
 # prep for plotting
@@ -170,6 +172,7 @@ df_21_full <- as_draws_df(fit21$draws(c("mu_a", "mu_b")))
 df_21_full <- df_21_full %>% select(-.draw, -.chain, -.iteration)
 df_22_full <- as_draws_df(fit22$draws(c("mu_a", "mu_b")))
 df_22_full <- df_22_full %>% select(-.draw, -.chain, -.iteration)
+df_12_full
 
 # compare intercepts
 mcse(df_12_full$mu_a > df_22_full$mu_a)
@@ -204,10 +207,11 @@ df_11$part <- 1
 df_12$part <- 2
 df_21$part <- 1
 df_22$part <- 2
+df_12
 
 # bind together groups
-df_1 <- rbind(df_11, df_21)
-df_2 <- rbind(df_12, df_22)
+df_1 <- rbind(df_11, df_21) # part 1
+df_2 <- rbind(df_12, df_22) # part 2
 
 # cast to factors
 df_1$group <- as.factor(df_1$group)
@@ -223,7 +227,7 @@ g1 <- ggplot() +
       colour = group
     ),
     alpha = 0.5,
-    size = 1
+    linewidth = 1
   ) +
   ylab("Response") +
   xlab("Question index") +

@@ -306,11 +306,19 @@ Why do you think that the Bayesian statistics course is the best course?
 
 What’s your favorite part about working with our support team?
 
-Should a smack as part of good parental correction be a criminal offence in New Zealand?"
+Should a smack as part of good parental correction be a criminal offence in New Zealand?
 
 Do you get aroused when you put on women's clothes?
 
 What other benefits do you see for having a dog, other than for food?
+</div>
+
+<div style="padding: 10px; border: 1px solid transparent; border-color: transparent; margin-bottom: 5px; border-radius: 4px; color: #000000; background-color: #f5f7f7; border-color: #000000;">
+<b>And some examples from recent referendums in Slovenia:</b>
+
+Do you support the implementation of the JEK2 project, which, together with other low-carbon sources, will ensure a stable supply of electricity?
+
+Are you in favor of introducing preferential voting for the elections of deputies to the National Assembly of the Republic of Slovenia, which will ensure that voters have a decisive influence on the choice of a deputy?
 </div>
 
 ##### Negatively worded questions

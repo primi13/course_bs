@@ -9,12 +9,15 @@ library(glmnet) # for L2 (ridge) and L1 (lasso) regressions
 # load and prepare data --------------------------------------------------------
 data <- read.csv("./session_07_hierarchical_models/data/ozone.csv")
 
-# use 500 to train the rest to test
+# use 500 to train the rest (853) to test
 idx <- sample(1:nrow(data), 500, rep = F)
+idx
 
 # in practice, test data should not be used
 # to scale all data, but we do it to simplify
+str(data)
 data[, -1] <- scale(data[, -1])
+str(data)
 
 # train test split
 dat_train <- data[idx, ]
@@ -34,6 +37,7 @@ res_tr <- rbind(res_tr, data.frame(
   Predicted = predict(my_lm),
   True = dat_train$target
 ))
+res_tr
 res_te <- rbind(res_te, data.frame(
   Method = "lm",
   Row = 1:nrow(dat_test),
@@ -123,6 +127,7 @@ pred_test <- as_draws_df(fit$draws("pred_test"))
 pred_test <- pred_test %>% select(-.chain, -.iteration, -.draw)
 lm_beta <- as_draws_df(fit$draws("beta"))
 lm_beta <- lm_beta %>% select(-.chain, -.iteration, -.draw)
+pred
 
 res_tr <- rbind(res_tr, data.frame(
   Method = "lmBayes",
@@ -243,7 +248,7 @@ pred_test <- as_draws_df(fit$draws("pred_test"))
 pred_test <- pred_test %>% select(-.chain, -.iteration, -.draw)
 L1_beta <- as_draws_df(fit$draws("beta"))
 L1_beta <- L1_beta %>% select(-.chain, -.iteration, -.draw)
-
+pred
 res_tr <- rbind(res_tr, data.frame(
   Method = "L1Bayes",
   Row = 1:nrow(dat_train),

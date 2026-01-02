@@ -16,6 +16,7 @@ data <- read.csv("./session_05_the_bayesian_workflow/data/temperature.csv", sep 
 
 # remove month
 data <- data %>% select(-month)
+data
 
 # mean per year
 data <- data %>%
@@ -24,6 +25,7 @@ data <- data %>%
 
 # shift to 0
 data$year0 <- data$year - min(data$year)
+data
 
 # prep the data for Stan
 n <- nrow(data)
@@ -48,6 +50,7 @@ fit$summary()
 # analysis ---------------------------------------------------------------------
 # extract draws
 df <- as_draws_df(fit$draws())
+df
 
 # mcse
 mcse(df$b)
@@ -60,17 +63,20 @@ hdi(df$b, credMass = 0.90)
 df_100 <- data.frame(alpha = df$a, beta = df$b)
 df_100 <- sample_n(df_100, 100)
 
+df_1000 <- data.frame(alpha = df$a, beta = df$b)
+df_1000 <- sample_n(df_1000, 1000)
+
 # plot
 ggplot() +
   geom_point(
     data = data,
     aes(x = year0, y = temperature),
-    alpha = 0.3, linewidth = 1.5, shape = 16
+    alpha = 0.3, size = 1.5, shape = 16
   ) +
   geom_abline(
-    data = df_100,
+    data = df_1000,
     aes(slope = beta, intercept = alpha),
-    alpha = 0.05, linewidth = 1
+    alpha = 0.02, linewidth = 1
   ) +
   ylim(6, 12) +
   scale_x_continuous(
